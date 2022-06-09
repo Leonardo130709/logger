@@ -1,5 +1,7 @@
 [core]
-    remote = yc
+    remote = local_remote
 ['remote "yc"']
     url = s3://rqc-loglake
     endpointurl = https://storage.yandexcloud.net
+['remote "local_remote"']
+    url = /tmp/dvcremote

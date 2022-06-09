@@ -17,7 +17,9 @@ class Config(config.BaseConfig):
     seed: int = 0
 
 
-def make_experiment(config: Config) -> Tuple[nn.Module, torch.optim.Optimizer, DataLoader, SummaryWriter]:
+def make_experiment(config: Config
+                    ) -> Tuple[nn.Module, torch.optim.Optimizer, DataLoader, SummaryWriter]:
+
     model = nn.Sequential(nn.Linear(1, config.hidden), nn.Tanh(), nn.Linear(config.hidden, 1))
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
     dataloader = DataLoader(utils.make_dataset(), batch_size=config.batch_size, shuffle=True)
@@ -33,12 +35,9 @@ if __name__ == "__main__":
     torch.save({
         "model": model.state_dict(),
         "optim": optimizer.state_dict()
-     }, "logdir/state.pt")
+     }, "logdir/model_and_optim.pt")
 
     metrics = utils.eval(model, dataloader)
-    json.dump(metrics, open('logdir/metrics.json', 'w'))
-    callback.add_hparams(dataclasses.asdict(config), metrics)
-
-
-
+    json.dump(metrics, open('summary/metrics.json', 'w'))
+    callback.add_hparams(dataclasses.asdict(config), metrics, run_name=utils.git_commit()) # absolute path is evil
     

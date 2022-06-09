@@ -1,0 +1,21 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python -m src.main
+    deps:
+    - path: src/
+      md5: aebb2043bbbbd3845cf95586b4e53303.dir
+      size: 9417
+      nfiles: 8
+    params:
+      params.yml:
+        batch_size: 32
+        epochs: 10
+        lr: 0.01
+    outs:
+    - path: logdir/metrics.json
+      md5: 909b8f6e141419bf336373bb97410c33
+      size: 55
+    - path: logdir/state.pt
+      md5: 6699533929067e0b40cf1a25e2c88ed0
+      size: 4545

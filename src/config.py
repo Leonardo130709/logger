@@ -1,3 +1,4 @@
+import os
 import abc
 import dataclasses
 from typing import TypeVar
@@ -36,3 +37,7 @@ class BaseConfig(abc.ABC):
             value = getattr(self, field.name)
             value = field.type(value)
             setattr(self, field.name, value)
+
+    @staticmethod
+    def git_commit():
+        return os.popen('git rev-parse HEAD').read().strip()
