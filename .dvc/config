@@ -1,0 +1,5 @@
+[core]
+    remote = yc
+['remote "yc"']
+    url = s3://rqc-loglake
+    endpointurl = https://storage.yandexcloud.net

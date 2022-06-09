@@ -4,9 +4,9 @@ stages:
     deps:
     - src/
     params:
-    - params.yml
+    - params.yml:
     outs:
     - logdir/state.pt      
     metrics:
-            - logdir/metric.json:
-                    cache: False
+      - logdir/metrics.json:
+          cache: False

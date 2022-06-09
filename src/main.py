@@ -33,7 +33,7 @@ if __name__ == "__main__":
     torch.save({
         "model": model.state_dict(),
         "optim": optimizer.state_dict()
-     }, "state.pt")
+     }, "logdir/state.pt")
 
     metrics = utils.eval(model, dataloader)
     json.dump(metrics, open('logdir/metrics.json', 'w'))
