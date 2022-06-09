@@ -21,7 +21,7 @@ def make_experiment(config: Config) -> Tuple[nn.Module, torch.optim.Optimizer, D
     model = nn.Sequential(nn.Linear(1, config.hidden), nn.Tanh(), nn.Linear(config.hidden, 1))
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
     dataloader = DataLoader(utils.make_dataset(), batch_size=config.batch_size, shuffle=True)
-    callback = SummaryWriter(log_dir='.')
+    callback = SummaryWriter(log_dir='logdir')
     return model, optimizer, dataloader, callback
 
 
@@ -36,7 +36,7 @@ if __name__ == "__main__":
      }, "state.pt")
 
     metrics = utils.eval(model, dataloader)
-    json.dump(metrics, open('metrics.json', 'w'))
+    json.dump(metrics, open('logdir/metrics.json', 'w'))
     callback.add_hparams(dataclasses.asdict(config), metrics)
 
 
