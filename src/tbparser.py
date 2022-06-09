@@ -1,9 +1,6 @@
 import csv
-import pathlib
 from typing import Optional, Dict, List, Iterable, Union
 import tensorboard.backend.event_processing.event_accumulator as tbea
-
-Path = Union[str, pathlib.Path]
 
 
 class TBParser:
@@ -12,12 +9,12 @@ class TBParser:
     For now handles only ScalarEvents.
     Hyperparams are second requested.
     """
-    def __init__(self, path: Path, size_guidance: int = 0):
+    def __init__(self, path: str, size_guidance: int = 0):
         self._acc = self._prepare_accumulator(path, size_guidance)
 
     def to_dict(
             self,
-            prefix_keys: Optional[Iterable] = None,
+            suffix_keys: Optional[Iterable] = None,
             only_values: bool = False
     ) -> Dict[str, List[Union[tbea.SCALARS, float]]]:
         """Extract dictionary of ScalarEvents for required keys."""
@@ -29,8 +26,8 @@ class TBParser:
             return scalars
 
         def _predicate(key):
-            if prefix_keys:
-                return any(map(key.endswith, self.keys))
+            if suffix_keys:
+                return any(map(key.endswith, suffix_keys))
             else:
                 return True
 
@@ -38,10 +35,10 @@ class TBParser:
 
     def to_csv(
             self,
-            path: Path,
-            prefix_keys: Optional[Iterable] = None
+            path: str,
+            suffix_keys: Optional[Iterable] = None
     ) -> None:
-        dict_log = self.to_dict(prefix_keys=prefix_keys, only_values=True)
+        dict_log = self.to_dict(suffix_keys=suffix_keys, only_values=True)
         row_numbers = set(map(len, dict_log.values()))
         assert len(row_numbers) == 1, "Number of rows differ per column."
 
@@ -60,15 +57,15 @@ class TBParser:
         """Since DVC support JSON."""
 
     @staticmethod
-    def _prepare_accumulator(path: Path, size_guidance: int) -> tbea.EventAccumulator:
+    def _prepare_accumulator(path: str, size_guidance: int) -> tbea.EventAccumulator:
         acc = tbea.EventAccumulator(path, size_guidance={tbea.SCALARS: size_guidance})
         return acc.Reload()
 
     @classmethod
-    def detect_logs(cls, root: Path):
-        return tuple(filter(
+    def detect_logs(cls, directory: str) -> List[str]:
+        return list(filter(
             tbea.io_wrapper.IsSummaryEventsFile,
-            tbea.io_wrapper.ListRecursivelyViaWalking(root)
+            tbea.io_wrapper.ListDirectoryAbsolute(directory)
         ))
 
 

@@ -1,6 +1,5 @@
 from src.tbparser import TBParser
 
-logs_files = TBParser.detect_logs('logdir')
-for log in logs_files:
-    parser = TBParser(log)
-    parser.to_csv('summary/mse_loss', prefix_keys=('mse_loss',))
+logs = TBParser.detect_logs('logdir')
+parser = TBParser(logs[0])
+parser.to_csv('summary/mse_loss', suffix_keys=('mse_loss',))
