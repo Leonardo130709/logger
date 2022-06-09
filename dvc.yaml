@@ -1,0 +1,13 @@
+stages:
+  train:
+    cmd: python -m src.main
+    wdir: logdir
+    deps:
+    - src/
+    params:
+    - params.yml
+    outs:
+    - state.pt      
+    metrics:
+            - metric.json:
+                    cache: False
