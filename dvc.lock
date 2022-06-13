@@ -4,18 +4,30 @@ stages:
     cmd: python -m src.main
     deps:
     - path: src/
-      md5: aebb2043bbbbd3845cf95586b4e53303.dir
-      size: 9417
-      nfiles: 8
+      md5: 92eb815fd1256e2bdfb41930b2aa7bbd.dir
+      size: 16302
+      nfiles: 10
     params:
       params.yml:
         batch_size: 32
         epochs: 10
         lr: 0.01
     outs:
-    - path: logdir/metrics.json
-      md5: 909b8f6e141419bf336373bb97410c33
+    - path: logdir/
+      md5: 0281b6aed5284e6aaad52f6050d4625a.dir
+      size: 8312
+      nfiles: 3
+    - path: summary/metrics.json
+      md5: dfc381a6d393a48d5ed59f85abc49328
       size: 55
-    - path: logdir/state.pt
-      md5: 6699533929067e0b40cf1a25e2c88ed0
-      size: 4545
+  postprocess:
+    cmd: python postproc.py
+    deps:
+    - path: logdir/
+      md5: 0281b6aed5284e6aaad52f6050d4625a.dir
+      size: 8312
+      nfiles: 3
+    outs:
+    - path: summary/mse_loss
+      md5: ec6cbbee4e0225e445d8da965d274506
+      size: 1379
