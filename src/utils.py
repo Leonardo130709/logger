@@ -1,17 +1,8 @@
-import os
 from typing import Dict
 import torch
 from torch.utils import tensorboard
 from torch.utils.data import DataLoader, TensorDataset
 nn = torch.nn
-
-
-def git_commit(git_dir='.'):
-    cur_dir = os.getcwd()
-    os.chdir(git_dir)
-    commit = os.popen('git rev-parse HEAD').read()
-    os.chdir(cur_dir)
-    return commit
 
 
 def make_dataset(weight: float = 2., bias: float = 1., size: int = 200) -> TensorDataset:

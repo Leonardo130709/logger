@@ -23,7 +23,7 @@ def make_experiment(config: Config
     model = nn.Sequential(nn.Linear(1, config.hidden), nn.Tanh(), nn.Linear(config.hidden, 1))
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
     dataloader = DataLoader(utils.make_dataset(), batch_size=config.batch_size, shuffle=True)
-    callback = SummaryWriter(log_dir='logdir')
+    callback = SummaryWriter(log_dir="logdir")
     return model, optimizer, dataloader, callback
 
 
