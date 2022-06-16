@@ -1,10 +1,12 @@
 stages:
   sample_config:
-    cmd: python sample.config.py
+    cmd: python sample_config.py
     deps:
-      - sample_config.py
+    - sample_config.py
     outs:
-      - params.yml
+    - params.yml:
+        cache: false
+
   train:
     cmd: python -m src.main
     deps:
@@ -16,6 +18,7 @@ stages:
     metrics:
     - summary/metrics.json:
         cache: false
+
   postprocess:
     cmd: python postproc.py
     deps:
@@ -23,3 +26,8 @@ stages:
     plots:
     - summary/mse_loss:
         cache: false
+
+  push_to_yc:
+    cmd: python push_to_yc.py
+    deps:
+    - push_to_yc.py

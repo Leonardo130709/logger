@@ -1,3 +1,4 @@
+import os
 import random
 import dataclasses
 from ruamel.yaml import YAML
@@ -19,8 +20,10 @@ def sample_config(config):
 
 
 if __name__ == "__main__":
+    if os.path.exists('params.yml'):
+        os.unlink('params.yml')
     config = sample_config(Config())
-    with open('pararms.yml', 'w') as config_file:
+    with open('params.yml', 'w') as config_file:
         YAML().dump(dataclasses.asdict(config), config_file)
 
 

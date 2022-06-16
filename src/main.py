@@ -39,5 +39,5 @@ if __name__ == "__main__":
 
     metrics = utils.eval(model, dataloader)
     json.dump(metrics, open('summary/metrics.json', 'w'))
-    callback.add_hparams(dataclasses.asdict(config), metrics, run_name=utils.git_commit()) # absolute path is evil
+    callback.add_hparams(dataclasses.asdict(config), metrics)
     
