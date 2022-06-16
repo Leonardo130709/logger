@@ -1,0 +1,5 @@
+hidden: 48
+lr: 0.003816107512571595
+batch_size: 39
+epochs: 1
+seed: 38
