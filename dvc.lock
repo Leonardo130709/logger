@@ -1,5 +1,15 @@
 schema: '2.0'
 stages:
+  sample_config:
+    cmd: python sample_config.py
+    deps:
+    - path: sample_config.py
+      md5: 5705218b6b384ec1ead68652e6e7792b
+      size: 708
+    outs:
+    - path: params.yml
+      md5: f3fd55e51322e1692105c34078d567c0
+      size: 70
   train:
     cmd: python -m src.main
     deps:
@@ -9,43 +19,33 @@ stages:
       nfiles: 8
     params:
       params.yml:
-        batch_size: 39
-        epochs: 1
-        hidden: 48
-        lr: 0.003816107512571595
-        seed: 38
+        batch_size: 32
+        epochs: 30
+        hidden: 64
+        lr: 0.01
+        seed: 9
     outs:
     - path: logdir/
-      md5: b6a5636b851ee05a82251d60f205c2ce.dir
-      size: 5946
+      md5: 4c60a9d76d673e9d7f547e2e7cb9b876.dir
+      size: 15904
       nfiles: 3
     - path: summary/metrics.json
-      md5: 367ca0eae4856a4722df2899bbc1ad9c
-      size: 56
-  postprocess:
-    cmd: python postproc.py
-    deps:
-    - path: logdir/
-      md5: b6a5636b851ee05a82251d60f205c2ce.dir
-      size: 5946
-      nfiles: 3
-    outs:
-    - path: summary/mse_loss
-      md5: c967edd63fd08fef7d61b62ef5aa74aa
-      size: 478
-  sample_config:
-    cmd: python sample_config.py
-    deps:
-    - path: sample_config.py
-      md5: 5705218b6b384ec1ead68652e6e7792b
-      size: 708
-    outs:
-    - path: params.yml
-      md5: 55d570fe9def5cc9e30c78741230076b
-      size: 70
+      md5: bdd66ddfe595dc3231ec72237d6dd038
+      size: 54
   push_to_yc:
     cmd: python push_to_yc.py
     deps:
     - path: push_to_yc.py
-      md5: b7d213ad2be6e4004a2024b6776ea805
-      size: 802
+      md5: 907166eed6402c722a803d3a3317998c
+      size: 888
+  postprocess:
+    cmd: python postproc.py
+    deps:
+    - path: logdir/
+      md5: 4c60a9d76d673e9d7f547e2e7cb9b876.dir
+      size: 15904
+      nfiles: 3
+    outs:
+    - path: summary/mse_loss
+      md5: 9a77f1eee933b05c887accf5bcf911f4
+      size: 4162

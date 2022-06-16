@@ -1,12 +1,4 @@
 stages:
-  sample_config:
-    cmd: python sample_config.py
-    deps:
-    - sample_config.py
-    outs:
-    - params.yml:
-        cache: false
-
   train:
     cmd: python -m src.main
     deps:

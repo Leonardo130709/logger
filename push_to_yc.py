@@ -1,4 +1,5 @@
 import os
+import json
 import pathlib
 
 import ycutils.utils
@@ -6,7 +7,7 @@ from ycutils.database import Connector
 from dotenv import load_dotenv
 load_dotenv()
 
-name = "exp5"
+name = "exp4"
 s3_path = f"s3://loglake/{name}"
 
 connector = Connector(
@@ -26,6 +27,9 @@ for path in pathlib.Path('logdir').iterdir():
 connector.push_experiment(
     name="test",
     config=ycutils.utils.bsonify_yaml('params.yml'),
-    experiment={'requriements': ycutils.utils.parse_requirements('requirements.txt')},
+    experiment={
+        'requriements': ycutils.utils.parse_requirements('requirements.txt'),
+        'metrics': json.load(open('summary/metrics.json'))
+    },
     s3=s3_path
 )
