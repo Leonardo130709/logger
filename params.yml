@@ -1,5 +1,5 @@
-hidden: 64
+hidden: 128
 lr: 0.01
-batch_size: 32
+batch_size: 64
 epochs: 30
 seed: 9

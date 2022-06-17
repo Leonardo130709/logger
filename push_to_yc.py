@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import pathlib
 
@@ -7,7 +8,7 @@ from ycutils.database import Connector
 from dotenv import load_dotenv
 load_dotenv()
 
-name = "exp4"
+name = f"exp{sys.argv[1]}"
 s3_path = f"s3://loglake/{name}"
 
 connector = Connector(
@@ -20,12 +21,12 @@ connector = Connector(
 )
 
 s3 = connector.s3
-for path in pathlib.Path('logdir').iterdir():
+for path in pathlib.Path('logdir/').rglob("*"):
     if not path.is_dir():
         s3.upload_file(str(path), "loglake", str(name / path))
 
 connector.push_experiment(
-    name="test",
+    name=name,
     config=ycutils.utils.bsonify_yaml('params.yml'),
     experiment={
         'requriements': ycutils.utils.parse_requirements('requirements.txt'),
