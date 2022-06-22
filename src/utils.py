@@ -1,6 +1,7 @@
 from typing import Dict
+
+import sacred
 import torch
-from torch.utils import tensorboard
 from torch.utils.data import DataLoader, TensorDataset
 nn = torch.nn
 
@@ -16,17 +17,17 @@ def train(
         model: nn.Module,
         dataloader: DataLoader,
         optimizer: torch.optim.Optimizer,
-        callback: tensorboard.SummaryWriter,
+        callback: sacred.Experiment,
         epochs: int = 10
 ) -> None:
     for epoch in range(epochs):
-        for x, y in dataloader:
+        for step, (x, y) in enumerate(dataloader):
             y_preds = model(x)
             loss = (y_preds - y).pow(2).mean()
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            callback.add_scalar('mse_loss', loss.item(), epoch)
+            callback.log_scalar('mse_loss', loss.item(), step)
 
 
 def eval(model: nn.Module, dataloader: DataLoader) -> Dict[str, float]:

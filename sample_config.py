@@ -12,9 +12,9 @@ def _random_value(type):
         return random.uniform(1e-4, 1e-2)
 
 
-def sample_config(config):
+def sample_config():
     dict_config = {}
-    for field in dataclasses.fields(config):
+    for field in dataclasses.fields(Config):
         dict_config[field.name] = _random_value(field.type)
     return dataclasses.replace(config, **dict_config)
 
@@ -22,7 +22,7 @@ def sample_config(config):
 if __name__ == "__main__":
     if os.path.exists('params.yml'):
         os.unlink('params.yml')
-    config = sample_config(Config())
+    config = sample_config()
     with open('params.yml', 'w') as config_file:
         YAML().dump(dataclasses.asdict(config), config_file)
 

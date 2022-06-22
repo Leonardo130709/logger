@@ -1,11 +1,20 @@
-import sys
+from typing import Tuple
+
+import os
 import json
 import dataclasses
-from typing import Tuple
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
+
+import ycutils.utils
 from . import config, utils
+
+from sacred import Experiment
+from sacred.observers import MongoObserver
+from dotenv import load_dotenv
+
+load_dotenv()
 nn = torch.nn
 
 
@@ -18,27 +27,41 @@ class Config(config.BaseConfig):
     seed: int = 0
 
 
-def make_experiment(config: Config, suffix: str
-                    ) -> Tuple[nn.Module, torch.optim.Optimizer, DataLoader, SummaryWriter]:
+callback = MongoObserver(
+    client=ycutils.utils.make_mongo_client(
+            username=os.environ['username'],
+            password=os.environ['password'],
+            host=os.environ['host'],
+            authSource='logdb'
+    ),
+    db_name='logdb'
+)
+
+config = Config.load("params.yml")
+ex = Experiment()
+ex.observers.append(callback)
+ex.add_config(vars(config))
+
+
+def make_experiment(
+        config: Config
+) -> Tuple[nn.Module, torch.optim.Optimizer, DataLoader, SummaryWriter]:
 
     model = nn.Sequential(nn.Linear(1, config.hidden), nn.Tanh(), nn.Linear(config.hidden, 1))
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
     dataloader = DataLoader(utils.make_dataset(), batch_size=config.batch_size, shuffle=True)
-    callback = SummaryWriter(log_dir="logdir", filename_suffix='asda')
-    return model, optimizer, dataloader, callback
+    return model, optimizer, dataloader, None
 
 
-if __name__ == "__main__":
-    config = Config.load("params.yml")
+@ex.automain
+def main():
     torch.manual_seed(config.seed)  # there is still randomness in dataloader.
-    model, optimizer, dataloader, callback = make_experiment(config, sys.argv[1])
-    utils.train(model, dataloader, optimizer, callback, config.epochs)
+    model, optimizer, dataloader, _ = make_experiment(config)
+    utils.train(model, dataloader, optimizer, ex, config.epochs)
     torch.save({
         "model": model.state_dict(),
         "optim": optimizer.state_dict()
-     }, "logdir/model_and_optim.pt")
+    }, "logdir/model_and_optim.pt")
 
     metrics = utils.eval(model, dataloader)
     json.dump(metrics, open('summary/metrics.json', 'w'))
-    # callback.add_hparams(dataclasses.asdict(config), metrics)
-    
