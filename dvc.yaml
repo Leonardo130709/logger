@@ -1,9 +1,6 @@
-vars:
-  - run: 3
-
 stages:
   train:
-    cmd: python -m src.main ${run}
+    cmd: python -m src.main
     deps:
     - src/
     params:
@@ -23,6 +20,6 @@ stages:
         cache: false
 
   push_to_yc:
-    cmd: python push_to_yc.py ${run}
+    cmd: python push_to_yc.py
     deps:
     - push_to_yc.py

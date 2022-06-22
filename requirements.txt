@@ -1,4 +1,7 @@
 torch
 tensorboard
+python-dotenv
 dvc[all]
+sacred
 ruamel.YAML
+git+https://github.com/Leonardo130709/ycutils.git
