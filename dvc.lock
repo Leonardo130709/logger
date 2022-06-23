@@ -11,11 +11,11 @@ stages:
       md5: f3fd55e51322e1692105c34078d567c0
       size: 70
   train:
-    cmd: python -m src.main 3
+    cmd: python -m src.main
     deps:
     - path: src/
-      md5: b14eb59082fb4996889591a835391ac5.dir
-      size: 9481
+      md5: a01feb601522569421463bcaf14a8374.dir
+      size: 10349
       nfiles: 8
     params:
       params.yml:
@@ -26,18 +26,18 @@ stages:
         seed: 9
     outs:
     - path: logdir/
-      md5: e4df6c41186d4ca413e0090e0776a1d8.dir
-      size: 13553
-      nfiles: 2
+      md5: 3aa2c585c2ed8eab06e33e51cbee11b9.dir
+      size: 8001
+      nfiles: 1
     - path: summary/metrics.json
       md5: b50938fe83a9b0ea25516397351e87b6
       size: 55
   push_to_yc:
-    cmd: python push_to_yc.py 3
+    cmd: python push_to_yc.py
     deps:
     - path: push_to_yc.py
-      md5: 6864f6bce400a7718aec615247a02021
-      size: 912
+      md5: 012c889b593ab5ce761f0b3c9f3502e8
+      size: 740
   postprocess:
     cmd: python postproc.py
     deps:

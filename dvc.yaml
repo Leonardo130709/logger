@@ -1,9 +1,6 @@
-vars:
-  - run: 3
-
 stages:
   train:
-    cmd: python -m src.main ${run}
+    cmd: python -m src.main
     deps:
     - src/
     params:
@@ -14,15 +11,15 @@ stages:
     - summary/metrics.json:
         cache: false
 
-  postprocess:
-    cmd: python postproc.py
-    deps:
-    - logdir/
-    plots:
-    - summary/mse_loss:
-        cache: false
-
-  push_to_yc:
-    cmd: python push_to_yc.py ${run}
-    deps:
-    - push_to_yc.py
+#  postprocess:
+#    cmd: python postproc.py
+#    deps:
+#    - logdir/
+#    plots:
+#    - summary/mse_loss:
+#        cache: false
+#
+#  push_to_yc:
+#    cmd: python push_to_yc.py
+#    deps:
+#    - push_to_yc.py

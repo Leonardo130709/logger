@@ -32,13 +32,13 @@ callback = MongoObserver(
             username=os.environ['username'],
             password=os.environ['password'],
             host=os.environ['host'],
-            authSource='logdb'
+            authSource=os.environ['database']
     ),
-    db_name='logdb'
+    db_name=os.environ['database']
 )
 
 config = Config.load("params.yml")
-ex = Experiment()
+ex = Experiment("test_exp_w/sacred")
 ex.observers.append(callback)
 ex.add_config(vars(config))
 
