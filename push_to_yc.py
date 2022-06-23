@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 name = "test_exp"
-s3_path = f"s3://loglake/{name}"
+bucket = "rqc-loglake"
+s3_path = f"s3://{bucket}/{name}"
 
 connector = Connector(
     username=os.environ['username'],
@@ -23,14 +24,13 @@ connector = Connector(
 def upload_dir(s3, directory):
     for path in pathlib.Path(directory).rglob('*'):
         if not path.is_dir():
-            s3.upload_file(str(path), "loglake", str(name / path))
+            s3.upload_file(str(path), bucket, str(name / path))
         else:
             upload_dir(s3, path)
 
 
 upload_dir(connector.s3, "logdir")
 
-import pdb; pdb.set_trace()
 log_path = TBParser.detect_logs('logdir')[0]
 metrics = TBParser(log_path).to_dict('mse_loss', mode='unpack')
 

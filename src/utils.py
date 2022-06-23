@@ -19,14 +19,16 @@ def train(
         callback: tensorboard.SummaryWriter,
         epochs: int = 10
 ) -> None:
+    step = 0
     for epoch in range(epochs):
-        for step, (x, y) in enumerate(dataloader):
+        for x, y in dataloader:
             y_preds = model(x)
             loss = (y_preds - y).pow(2).mean()
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
             callback.add_scalar('mse_loss', loss.item(), step)
+            step += 1
 
 
 def eval(model: nn.Module, dataloader: DataLoader) -> Dict[str, float]:
